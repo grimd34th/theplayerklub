@@ -77,6 +77,7 @@ def peamenyy(params):
 	   orig.AddDir('[COLOR teal][B]Clear Cache[/B][/COLOR]','Clear Cache',7,orig.Images + 'clear.png')
 	   plugintools.add_item( action="license_check", title="[COLOR orangered][B][I]Settings[/I][/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"logo.png") , fanart=os.path.join(LOAD_LIVE,"background.png"), folder=False )
 	   plugintools.addItem('[COLOR limegreen][B][I]Click to Setup PVR SIMPLE CLIENT[/I][/B][/COLOR]','pvr',11,orig.Images + 'extras.png',orig.Images + 'background.png')
+	   plugintools.addItem(action='execute_ainfo',title='[COLOR white][B]My Account Info[/B][/COLOR]',fanart=os.path.join(LOAD_LIVE,"background.png") , folder=True)
 	   
 	   
 	elif orig.mode != 5:
@@ -280,7 +281,7 @@ def execute_ainfo(params):
 	plugintools.add_item( action="",   title="[COLOR = white]Status: [/COLOR]"+seis , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	plugintools.add_item( action="",   title="[COLOR = white]Expires: [/COLOR]"+aegub , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	plugintools.add_item( action="",   title="[COLOR = white]Max connections: [/COLOR]"+leavemealone , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	plugintools.add_item( action="",   title="Sign up at FutureStreams.tk" , thumbnail=os.path.join(LOAD_LIVE,vod_channels("bXlhY2MucG5n")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
+	plugintools.add_item( action="",   title="Sign up at theplayersklub.us" , thumbnail=os.path.join(LOAD_LIVE,vod_channels("bXlhY2MucG5n")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	
 	plugintools.set_view( plugintools.LIST )
 def vanema_lukk(name):
