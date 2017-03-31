@@ -43,7 +43,7 @@ def run():
 	showxxx=plugintools.get_setting("showxxx")
 	pnimi = "One View"
 	LOAD_LIVE = os.path.join( plugintools.get_runtime_path() , "resources" , "art" )
-	plugintools.log(pnimi+"Starting up")
+	plugintools.log(pnimi+"Starting Up")
 	televisioonilink = "%s:%s/enigma2.php?username=%s&password=%s&type=get_live_categories"%(lehekylg,pordinumber,kasutajanimi,salasona)
 	filmilink = "%s:%s/enigma2.php?username=%s&password=%s&type=get_vod_categories"%(lehekylg,pordinumber,kasutajanimi,salasona)
 	andmelink = "%s:%s/panel_api.php?username=%s&password=%s"%(lehekylg,pordinumber,kasutajanimi,salasona)
@@ -75,9 +75,8 @@ def peamenyy(params):
 	   orig.AddDir('[COLOR red][B]RED LIGHT[/B][/COLOR]','wizard3',10,orig.Images + 'adt.png',orig.Images + 'background.png')
 	   plugintools.addItem('[COLOR orange][B]Launch PVR[/B][/COLOR]','pvr',12,orig.Images + 'extras.png',orig.Images + 'background.png')
 	   orig.AddDir('[COLOR teal][B]Clear Cache[/B][/COLOR]','Clear Cache',7,orig.Images + 'clear.png')
-	   plugintools.add_item( action="license_check", title="[COLOR orangered][B][I]Settings[/I][/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"logo.png") , fanart=os.path.join(LOAD_LIVE,"background.png"), folder=False )
+	   plugintools.add_item( action="license_check", title="[COLOR orangered][B][I]Settings[/I][/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"logo.png")) , fanart=os.path.join(LOAD_LIVE,"background.png"), folder=False )
 	   plugintools.addItem('[COLOR limegreen][B][I]Click to Setup PVR SIMPLE CLIENT[/I][/B][/COLOR]','pvr',11,orig.Images + 'extras.png',orig.Images + 'background.png')
-	   plugintools.addItem(action='execute_ainfo',title='[COLOR white][B]My Account Info[/B][/COLOR]',fanart=os.path.join(LOAD_LIVE,"background.png") , folder=True)
 	   
 	   
 	elif orig.mode != 5:
@@ -117,12 +116,12 @@ def security_check(params):
 		plugintools.add_item( action="stream_video", title=kanalinimi , url=kategoorialink , thumbnail=os.path.join(LOAD_LIVE,"logo.png") , fanart="" , folder=True )
 	plugintools.set_view( plugintools.LIST )
 def detect_modification(params):
-	plugintools.log(pnimi+"VOD Menu "+repr(params))		
+	plugintools.log(pnimi+"VOD Menu "+repr(params))
 	request = urllib2.Request(filmilink, headers={"Accept" : "application/xml"})
 	u = urllib2.urlopen(request)
 	tree = ElementTree.parse(u)
 	rootElem = tree.getroot()
-	for channel in tree.findall(channel):
+	for channel in tree.findall("channel"):
 		filminimi = channel.find("title").text
 		filminimi = base64.b64decode(filminimi)
 		kategoorialink = channel.find("playlist_url").text
@@ -152,7 +151,7 @@ def stream_video(params):
 		kava = kava[2]
 		kava = kava.partition("   ")
 		kava = kava[2]
-		shou = get_live("JXM=")%(kanalinimi[0]+kanalinimi[1]+kanalinimi[2])
+		shou = "%s"%(kanalinimi[0]+kanalinimi[1]+kanalinimi[2])
 		kirjeldus = channel.find("description").text
 		if kirjeldus:
 		   kirjeldus = base64.b64decode(kirjeldus)
@@ -180,7 +179,7 @@ def stream_video(params):
 		   plugintools.add_item( action="run_cronjob", title=shou , url=striimilink, thumbnail=pilt, plot=kokku, fanart=os.path.join(LOAD_LIVE,"hometheater.jpg"), extra="", isPlayable=True, folder=False )
 		else:
 		   plugintools.add_item( action="run_cronjob", title=shou , url=striimilink, thumbnail=os.path.join(LOAD_LIVE,"logo.png") , plot=kokku, fanart=os.path.join(LOAD_LIVE,"hometheater.jpg") , extra="", isPlayable=True, folder=False )
-	if sync_data('Y2F0X2lkPTM=') in url:
+	if "cat_id=3" in url:
 	  plugintools.set_view( plugintools.MOVIES )
 	else:
 	  plugintools.set_view( plugintools.LIST )
@@ -259,8 +258,8 @@ def grab_epg():
 	   return jdata
 def kontroll():
 	randomstring = grab_epg()
-	kasutajainfo = randomstring["user_info"]
-	kontroll = kasutajainfo["auth"]
+	kasutajainfo = randomstring['user_info']
+	kontroll = kasutajainfo['auth']
 	return kontroll
 def get_live(channel):
 	video = base64.b64decode(channel)
@@ -268,20 +267,20 @@ def get_live(channel):
 def execute_ainfo(params):
 	plugintools.log(pnimi+"My account Menu "+repr(params))
 	andmed = grab_epg()
-	kasutajaAndmed = andmed["user_info"]
-	seis = kasutajaAndmed["status"]
-	aegub = kasutajaAndmed["exp_date"]
+	kasutajaAndmed = andmed['user_info']
+	seis = kasutajaAndmed['status']
+	aegub = kasutajaAndmed['exp_date']
 	if aegub:
 	   aegub = datetime.datetime.fromtimestamp(int(aegub)).strftime('%d/%m/%Y %H:%M')
 	else:
-	   aegub = "Never"
-	leavemealone = kasutajaAndmed["max_connections"]
-	polarbears = kasutajaAndmed["username"]
+	   aegub = 'Never'
+	leavemealone = kasutajaAndmed['max_connections']
+	polarbears = kasutajaAndmed['username']
 	plugintools.add_item( action="",   title="[COLOR = white]User: [/COLOR]"+polarbears , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	plugintools.add_item( action="",   title="[COLOR = white]Status: [/COLOR]"+seis , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
+	plugintools.add_item( action="",   title="[COLOR = white]Status: [/COLOR]"+seis , thumbnail=os.path.join(LOAD_LIVE,"livetv.png")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	plugintools.add_item( action="",   title="[COLOR = white]Expires: [/COLOR]"+aegub , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	plugintools.add_item( action="",   title="[COLOR = white]Max connections: [/COLOR]"+leavemealone , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	plugintools.add_item( action="",   title="Sign up at theplayersklub.us" , thumbnail=os.path.join(LOAD_LIVE,vod_channels("bXlhY2MucG5n")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
+	plugintools.add_item( action="",   title="Sign up at FutureStreams.tk" , thumbnail=os.path.join(LOAD_LIVE,"myacc.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	
 	plugintools.set_view( plugintools.LIST )
 def vanema_lukk(name):
