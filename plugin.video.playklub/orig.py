@@ -43,6 +43,7 @@ def MainMenu():
 		AddDir('Extras','Extras',5,Images + 'extras.png')
 		AddDir('Clear Cache','Clear Cache',7,Images + 'cache.png')
 		AddDir('Settings','settings',4,Images + 'settings.png')
+
 def LiveTv(url):
 	list = common.m3u2list(ServerURL)
 	for channel in list:
@@ -86,13 +87,21 @@ def PlayUrl(name, url, iconimage=None):
 			if _NAME_ in name:
 				listitem = xbmcgui.ListItem(path=stream, thumbnailImage=iconimage)
 				listitem.setInfo(type="Video", infoLabels={ "Title": name })
-				xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)				
+				xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
+
+def playXml(url):
+	print '--- Playing "{0}". {1}'.format(url, name)
+	listitem = xbmcgui.ListItem(path=url, thumbnailImage=iconimage)
+	listitem.setInfo(type="Video", infoLabels={ "Title": name })
+	xbmc.Player().play(url,listitem=listitem)
+	return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
+	
 def AddAccInfo(name,url,mode,iconimage):
 		u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
 		ok=True
 		liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 		liz.setInfo( type="Video", infoLabels={ "Title": name } )
-		ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)				
+		ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)				
 def AddDir(name, url, mode, iconimage, description="", isFolder=True, background=None):
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&description="+urllib.quote_plus(description)
 	a=sys.argv[0]+"?url=None&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&description="+urllib.quote_plus(description)
@@ -100,7 +109,7 @@ def AddDir(name, url, mode, iconimage, description="", isFolder=True, background
 	liz = xbmcgui.ListItem(name, iconImage=iconimage, thumbnailImage=iconimage)
 	liz.setInfo(type="Video", infoLabels={ "Title": name, "Plot": description})
 	liz.setProperty('IsPlayable', 'true')
-	xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz, isFolder=isFolder)
+	xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz, isFolder=True)
 def Get_Params():
 	param = []
 	paramstring = sys.argv[2]
@@ -170,10 +179,6 @@ def wizard2(name,url,mode,iconimage,fanart,description,showcontext=True,allinfo=
 		ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
 		return ok
 		xbmcplugin.endOfDirectory(int(sys.argv[1]))
-def playXml(url):
-	xbmc.executebuiltin('PlayMedia(%s)' % url)
-	listitem.setThumbnailImage(iconimage)
-	xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 		
 def wizard3(fanart,description):
 	if show_adult == 'true':
@@ -191,6 +196,7 @@ def wizard3(fanart,description):
 	else:
 		xbmcgui.Dialog().ok('ERROR', 'Adult section is locked you need to turn this on in addon settings')
 		xbmcplugin.endOfDirectory(int(sys.argv[1]))
+		
 def addXMLMenu(name,url,mode,iconimage,fanart,description,showcontext=True,allinfo={}):
 		u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)+"&description="+urllib.quote_plus(description)
 		ok=True
@@ -211,6 +217,7 @@ def ExtraMenu(fanart,description):
 		else:
 			addXMLMenu(name,url,13,iconimage,FanArt,description)
 	xbmcplugin.endOfDirectory(int(sys.argv[1]))
+	
 def Movies(fanart,description,showcontext=True,):
 	OPEN = OPEN_URL('http://theplayersklub.us/vod/vods.xml').replace('\n','').replace('\r','')  #Spaf
 	match = re.compile('<title>(.+?)</title><link>(.+?)</link><thumbnail>(.+?)</thumbnail><fanart>(.+?)</fanart>').findall(OPEN)
