@@ -12,8 +12,8 @@ background = "background.png" #background.png
 defaultlogo = "logo.png" #defaultlogo.png
 hometheater = "hometheater.jpg"
 noposter = "noposter.jpg"
-theater = "theater.jpg"
-addonxml = "addon.xml"
+theater = "dGhlYXRlci5qcGc="
+addonxml = "theater.jpg"
 addonpy = "default.py"
 icon = "icon.png"
 fanart = "fanart.jpg"
@@ -30,7 +30,7 @@ def run():
 	global vanemalukk
 	global version
 	global showxxx
-	version = int(1)
+	version = int(get_live("MQ=="))
 	kasutajanimi=plugintools.get_setting("Username")
 	salasona=plugintools.get_setting("Password")
 	if not kasutajanimi:
@@ -43,15 +43,13 @@ def run():
 	showxxx=plugintools.get_setting("showxxx")
 	pnimi = "One View"
 	LOAD_LIVE = os.path.join( plugintools.get_runtime_path() , "resources" , "art" )
-	plugintools.log(pnimi+"Starting Up")
+	plugintools.log(pnimi+"Starting up")
 	televisioonilink = "%s:%s/enigma2.php?username=%s&password=%s&type=get_live_categories"%(lehekylg,pordinumber,kasutajanimi,salasona)
 	filmilink = "%s:%s/enigma2.php?username=%s&password=%s&type=get_vod_categories"%(lehekylg,pordinumber,kasutajanimi,salasona)
 	andmelink = "%s:%s/panel_api.php?username=%s&password=%s"%(lehekylg,pordinumber,kasutajanimi,salasona)
 	uuenduslink = "https://www.dropbox.com/s/7em24wd1pddidqo/version.txt?dl=1"
-	#if "One View" not in open(addonDir+"/"+"addon.xml").read():
-	   #check_user()
 	params = plugintools.get_params()
-	
+
 	if params.get("action") is None:
 		peamenyy(params)
 	else:
@@ -73,12 +71,12 @@ def peamenyy(params):
 	   plugintools.add_item( action="security_check",  title="[COLOR gold][B][I]PLAYERS LIVE[/I][/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"background.png") , folder=True )
 	   orig.AddDir('[COLOR deepskyblue][B]VOD/RETRO/CATCH UP[/B][/COLOR]','ExtraMenu',5,orig.Images + 'movies.png',orig.Images + 'background.png')
 	   orig.AddDir('[COLOR red][B]RED LIGHT[/B][/COLOR]','wizard3',10,orig.Images + 'adt.png',orig.Images + 'background.png')
-	   plugintools.addItem('[COLOR orange][B]Launch PVR[/B][/COLOR]','pvr',12,orig.Images + 'extras.png',orig.Images + 'background.png')
+	   plugintools.addItem('[COLOR orange][B]Launch PVR[/B][/COLOR]','pvr',12,orig.Images + 'launch-icon.png',orig.Images + 'background.png')
 	   orig.AddDir('[COLOR teal][B]Clear Cache[/B][/COLOR]','Clear Cache',7,orig.Images + 'clear.png')
-	   plugintools.add_item( action="license_check", title="[COLOR orangered][B][I]Settings[/I][/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"logo.png")) , fanart=os.path.join(LOAD_LIVE,"background.png"), folder=False )
-	   plugintools.addItem('[COLOR limegreen][B][I]Click to Setup PVR SIMPLE CLIENT[/I][/B][/COLOR]','pvr',11,orig.Images + 'extras.png',orig.Images + 'background.png')
-	   
-	   
+	   plugintools.add_item( action="license_check", title="[COLOR orangered][B][I]Settings[/I][/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"logo.png") , fanart=os.path.join(LOAD_LIVE,"background.png"), folder=False )
+	   plugintools.addItem('[COLOR limegreen][B][I]Click to Setup PVR SIMPLE CLIENT[/I][/B][/COLOR]','pvr',11,orig.Images + 'hqdefault.jpg',orig.Images + 'background.png')
+	   orig.AddDir('[COLOR blue][B]FAVOURITES[/B][/COLOR]','TVShows',9,orig.Images + 'Favorites.png',orig.Images + 'background.png')
+
 	elif orig.mode != 5:
 	   plugintools.add_item( action="license_check",  title="[COLOR yellow][B]Click here to enter login[/B][/COLOR]" , thumbnail=os.path.join(LOAD_LIVE,"logo.png") , fanart=os.path.join(LOAD_LIVE,"background.png") , folder=False )
 
@@ -130,11 +128,6 @@ def detect_modification(params):
 def stream_video(params):
 	alreadyinput = False
 	plugintools.log(pnimi+"Live Channels Menu "+repr(params))
-	#if "One View" not in open(addonDir+"/"+"addon.xml").read():
-	   #check_user()
-	#if vanemalukk == "true":
-	 #  pealkiri = params.get("title")
-	  # vanema_lukk(pealkiri)
 	url = params.get("url")
 	request = urllib2.Request(url, headers={'User-Agent' : 'Mozilla/5.0',"Accept" : "application/xml"})
 	u = urllib2.urlopen(request)
@@ -151,7 +144,7 @@ def stream_video(params):
 		kava = kava[2]
 		kava = kava.partition("   ")
 		kava = kava[2]
-		shou = "%s"%(kanalinimi[0]+kanalinimi[1]+kanalinimi[2])
+		shou = get_live("JXM=")%(kanalinimi[0]+kanalinimi[1]+kanalinimi[2])
 		kirjeldus = channel.find("description").text
 		if kirjeldus:
 		   kirjeldus = base64.b64decode(kirjeldus)
@@ -186,9 +179,6 @@ def stream_video(params):
 	xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_TITLE)
 def get_myaccount(params):
 		plugintools.log(pnimi+"VOD channels menu "+repr(params))
-		#if vanemalukk == "true":
-		   #pealkiri = params.get("title")
-		   #vanema_lukk(pealkiri)
 		purl = params.get("url")
 		request = urllib2.Request(purl, headers={"Accept" : "application/xml"})
 		u = urllib2.urlopen(request)
@@ -202,7 +192,7 @@ def get_myaccount(params):
 			pilt = channel.find("desc_image").text
 			kirjeldus = channel.find("description").text
 			if kirjeldus:
-			   kirjeldus = base64.b64decode(kirjeldus) 
+			   kirjeldus = base64.b64decode(kirjeldus)
 			if pilt:
 			   plugintools.add_item( action="restart_service", title=pealkiri , url=striimilink, thumbnail=pilt, plot=kirjeldus, fanart=os.path.join(LOAD_LIVE,"theater.jpg") , extra="", isPlayable=True, folder=False )
 			else:
@@ -214,18 +204,15 @@ def get_myaccount(params):
 def run_cronjob(params):
 	extend=plugintools.get_setting("extend")
 	plugintools.log(pnimi+"PLAY_LIVE"+repr(params))
-	#if vanemalukk == "true":
-	   #pealkiri = params.get("title")
-	   #vanema_lukk(pealkiri)
 	lopplink = params.get("url")
 	lopplink = lopplink.replace('.ts','.%s'%extend)
 	plugintools.play_resolved_url( lopplink )
-	
+
 def run_cronjobxxx(params):
 	kasutajanimi=plugintools.get_setting("Username")
 	salasona=plugintools.get_setting("Password")
 	lopplink = params.get("url")
-	if "http://"  not in lopplink: 
+	if "http://"  not in lopplink:
 		lopplink = "http://otttv.ga:2095/live/%s/%s/%s"%(kasutajanimi,salasona,lopplink)
 		lopplink = lopplink[:-2]
 		lopplink = lopplink + "m3u8"
@@ -258,8 +245,8 @@ def grab_epg():
 	   return jdata
 def kontroll():
 	randomstring = grab_epg()
-	kasutajainfo = randomstring['user_info']
-	kontroll = kasutajainfo['auth']
+	kasutajainfo = randomstring["user_info"]
+	kontroll = kasutajainfo["auth"]
 	return kontroll
 def get_live(channel):
 	video = base64.b64decode(channel)
@@ -267,21 +254,21 @@ def get_live(channel):
 def execute_ainfo(params):
 	plugintools.log(pnimi+"My account Menu "+repr(params))
 	andmed = grab_epg()
-	kasutajaAndmed = andmed['user_info']
-	seis = kasutajaAndmed['status']
-	aegub = kasutajaAndmed['exp_date']
+	kasutajaAndmed = andmed["user_info"]
+	seis = kasutajaAndmed["status"]
+	aegub = kasutajaAndmed["exp_date"]
 	if aegub:
 	   aegub = datetime.datetime.fromtimestamp(int(aegub)).strftime('%d/%m/%Y %H:%M')
 	else:
-	   aegub = 'Never'
-	leavemealone = kasutajaAndmed['max_connections']
-	polarbears = kasutajaAndmed['username']
+	   aegub = "Never"
+	leavemealone = kasutajaAndmed["max_connections"]
+	polarbears = kasutajaAndmed["username"]
 	plugintools.add_item( action="",   title="[COLOR = white]User: [/COLOR]"+polarbears , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	plugintools.add_item( action="",   title="[COLOR = white]Status: [/COLOR]"+seis , thumbnail=os.path.join(LOAD_LIVE,"livetv.png")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	plugintools.add_item( action="",   title="[COLOR = white]Expires: [/COLOR]"+aegub , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	plugintools.add_item( action="",   title="[COLOR = white]Max connections: [/COLOR]"+leavemealone , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
+	plugintools.add_item( action="",   title="[COLOR = white]Status: [/COLOR]"+seis , thumbnail=os.path.join(LOAD_LIVE,"livetv.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
+	plugintools.add_item( action="",   title="[COLOR = white]Expires: [/COLOR]"+aegub , thumbnail=os.path.join(LOAD_LIVE,vod_channels("bGl2ZXR2LnBuZw==")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
+	plugintools.add_item( action="",   title="[COLOR = white]Max connections: [/COLOR]"+leavemealone , thumbnail=os.path.join(LOAD_LIVE,vod_channels("bGl2ZXR2LnBuZw==")) , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
 	plugintools.add_item( action="",   title="Sign up at FutureStreams.tk" , thumbnail=os.path.join(LOAD_LIVE,"myacc.png") , fanart=os.path.join(LOAD_LIVE,"theater.jpg") , folder=False )
-	
+
 	plugintools.set_view( plugintools.LIST )
 def vanema_lukk(name):
 		plugintools.log(pnimi+"Parental lock ")
@@ -319,12 +306,10 @@ def kontrolli_uuendusi():
 				  plugintools.log(pnimi+"Extracting update...")
 				  import ziptools
 				  unzipper = ziptools.ziptools()
-				  #destpathname = xbmc.translatePath(os.path.join('special://','home'))
 				  plugintools.log(pnimi+destpathname)
 				  unzipper.extract( local_file_name , destpathname )
 				  os.remove(local_file_name)
 				  xbmc.executebuiltin((u'XBMC.Notification("Updated", "The add-on has been updated", 2000)'))
-				  #import updater
 				  xbmc.executebuiltin( "Container.Refresh" )
 				  plugintools.log(pnimi+"Update success")
 			  except:
@@ -345,7 +330,7 @@ def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
 	except:
 		percent = 100
 		dp.update(percent)
-	if dp.iscanceled(): 
+	if dp.iscanceled():
 		print "DOWNLOAD CANCELLED" # need to get this part working
 		dp.close()
 def load_channels():
