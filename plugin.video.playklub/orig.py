@@ -244,10 +244,7 @@ def resolve(url):
 	xbmcplugin.endOfDirectory(int(sys.argv[1]))
 	
 def TVShows(fanart,description):
-	OPEN = OPEN_URL('http://theplayersklub.us/vod/vods.xml').replace('\n','').replace('\r','')  #Spaf
-	match = re.compile('<title>(.+?)</title><link>(.+?)</link><thumbnail>(.+?)</thumbnail><fanart>(.+?)</fanart>').findall(OPEN)
-	for name,url,iconimage,FanArt in match:
-		addXMLMenu(name,url,13,iconimage,FanArt,description)
+	xbmc.executebuiltin("ActivateWindow(favourites)")
 
 def gettextdata(url):
 	mayfair_show_busy_dialog()
